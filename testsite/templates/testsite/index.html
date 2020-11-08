@@ -1,16 +1,24 @@
+<head> 
+  {% load static %}
+  <link href=”bokeh-1.0.4.min.css" rel=”stylesheet” type=”text/css”>
+  <link href=”bokeh-widgets-1.0.4.min.css" rel=”stylesheet” type=”text/css”>
+  <script src={% static 'bokeh-2.2.3.min.js' %}></script>
+  <script src={% static 'bokeh-widgets-2.2.3.min.js' %}></script>
+  {{ script | safe }}
 
+</head>
+<form method='POST' enctype="multipart/form-data"> {% csrf_token %}
+  <label for="pattern">Padrao de nome:</label><br>
+  <input type="text" id="pattern" name="pattern"><br>
+  <label for="sep">Separador:</label><br>
+  <input type="text" id="sep" name="sep">
+  <p></p>
+  <input type="file" id="myfiles" name="myfiles" webkitdirectory directory/>
+  <input type="submit"/>
+</form>
 
+{{ div | safe }}
 
-
-
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="myfile" multiple>
-    <button type="submit">Upload</button>
-  </form>
-
-
-    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-  
-
-  
+{% for f in csv_files %}
+  <p>{{ f }}</p>
+{% endfor %}
