@@ -1,11 +1,6 @@
 <head> 
   {% load static %}
-  <link href=”bokeh-1.0.4.min.css" rel=”stylesheet” type=”text/css”>
-  <link href=”bokeh-widgets-1.0.4.min.css" rel=”stylesheet” type=”text/css”>
-  <script src={% static 'bokeh-2.2.3.min.js' %}></script>
-  <script src={% static 'bokeh-widgets-2.2.3.min.js' %}></script>
-  {{ script | safe }}
-
+  <script src={% static 'plotly-latest.min.js' %}></script>
 </head>
 <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
   <label for="pattern">Padrao de nome:</label><br>
@@ -17,8 +12,7 @@
   <input type="submit"/>
 </form>
 
-{{ div | safe }}
+{% autoescape off %}
+{{ div }}
+{% endautoescape %}
 
-{% for f in csv_files %}
-  <p>{{ f }}</p>
-{% endfor %}

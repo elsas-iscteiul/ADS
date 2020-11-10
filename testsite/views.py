@@ -4,8 +4,8 @@ from django.core.files.storage import FileSystemStorage
 import os, glob, shutil
 from pathlib import Path
 import pandas as pd
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components
+from plotly.offline import plot
+import plotly.express as px
 
 pattern = ''
 sepa = ''
@@ -16,13 +16,6 @@ def index(request):
     global sepa
     global pattern
 
-    x =[1,2,3]
-    y =[1,2,3]
-
-    fig = figure(plot_width=400, plot_height=400)
-    fig.circle(x=x, y=y)
-    script, div = components(fig)
-
     if request.method == "POST":
         files = request.FILES.getlist('myfiles')
         for f in files:
@@ -31,12 +24,16 @@ def index(request):
         pattern = request.POST.get('pattern')
         sepa = request.POST.get('sep')
 
-        csv_files = get_files()
-        context = {'csv_files': csv_files, 'script':script,'div':div}
         populate()
+
         df = pd.DataFrame(every_data, columns=['accuracy','loss','val_accuracy','val_loss','file_name','index','algorithm'])
-        print(df.loc[0,:])
         shutil.rmtree(settings.MEDIA_ROOT)
+
+        fig = px.scatter(df, x="accuracy",y="loss",color="algorithm",hover_name="algorithm",hover_data=["file_name","index"])
+        
+        div = plot(fig, output_type='div', include_plotlyjs=False)
+
+        context = {'div': div}
 
         return render(request, "testsite/index.html", context)
     
