@@ -1,18 +1,15 @@
 <head> 
-  {% load static %}
-  <script src={% static 'plotly-latest.min.js' %}></script>
+  {% load plotly_dash %}
+  {% plotly_header %}
 </head>
 <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
-  <label for="pattern">Padrao de nome:</label><br>
-  <input type="text" id="pattern" name="pattern"><br>
-  <label for="sep">Separador:</label><br>
-  <input type="text" id="sep" name="sep">
-  <p></p>
   <input type="file" id="myfiles" name="myfiles" webkitdirectory directory/>
   <input type="submit"/>
 </form>
 
-{% autoescape off %}
-{{ div }}
-{% endautoescape %}
 
+{% if load %}
+{% plotly_direct name="DashApp" %}
+{% endif %}
+
+{% plotly_footer %}
