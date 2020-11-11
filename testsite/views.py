@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from . import parse
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import os
