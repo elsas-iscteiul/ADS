@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'testsite',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     
-    
 ]
 
 STATIC_URL = '/static/'
