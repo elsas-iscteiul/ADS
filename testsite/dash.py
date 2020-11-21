@@ -1,4 +1,4 @@
-import dash
+import dash, dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
@@ -9,6 +9,12 @@ import plotly.graph_objects as go
 
 
 def draw(df):
+    
+    dff = df.drop('index', 1)
+    dff = dff.groupby(['algorithm']).agg(['mean','median','std']).transpose()
+    dff = dff.reset_index()
+    dff.rename(columns = {'level_0':'field','level_1':'statistic'}, inplace=True)
+
     app = DjangoDash('DashApp')
 
 
@@ -68,6 +74,14 @@ def draw(df):
             {'label':'val_loss', 'value':'val_loss'},
         ],
     ),
+    html.Label('Estatisticas'),
+    dash_table.DataTable(
+        id='table',
+        columns = [{'name': i, 'id': i} for i in dff.columns],
+        data = dff.to_dict('records')
+    ),
+    
+
 
     html.Label('Gráfico'),
     dcc.Dropdown(
@@ -79,7 +93,7 @@ def draw(df):
             
         ],
     ),
-    dcc.Graph(id='desenho', config={'displayModeBar': False})
+        dcc.Graph(id='desenho', config={'displayModeBar': False})
 
     ])
 
@@ -102,3 +116,4 @@ def draw(df):
             
         fig.update_layout(legend=dict(yanchor="top", y=0.99,xanchor="right",x=0.1, orientation="h"))
         return fig
+    
