@@ -87,7 +87,7 @@ def draw(df):
                 
             ],
         ),
-        dcc.Graph(id='desenho', config={'displayModeBar': False}),
+        dcc.Graph(id='desenho'),
         html.Label('Estatisticas'),
         dash_table.DataTable(
             id = 'table',
@@ -112,7 +112,7 @@ def draw(df):
         else:
             df_1 = df
 
-        print(df_1.head()) 
+         
         return df_1.to_json()
 
 
