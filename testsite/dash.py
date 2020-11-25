@@ -84,6 +84,7 @@ def draw(df):
                 {'label':'3d_symbol', 'value':'3d_symbol'},
                 {'label':'3d_size', 'value':'3d_size'},
                 {'label':'subplot', 'value':'subplot'},
+                {'label':'animated_subplot', 'value':'animated_subplot'},
                 
             ],
         ),
@@ -112,7 +113,6 @@ def draw(df):
         else:
             df_1 = df
 
-        print(alg) 
         return df_1.to_json()
 
 
@@ -134,9 +134,16 @@ def draw(df):
         elif u_name == "3d_size":
             fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", size=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "subplot":
-            fig = px.scatter(df_1,x=x_name,y=y_name,symbol="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+            fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+        elif u_name == "animated_subplot":
+            fig = px.scatter(df_1, x=x_name, y=y_name,facet_col="algorithm",size=z_name,color=w_name,animation_frame="index", animation_group="algorithm", hover_data=["file_name","index"],width=1280,height=720)
+            fig.update_layout(margin=dict(l=20,r=20,t=20,b=20))
+            fig.update_xaxes(range=[-2,2])
+            fig.update_yaxes(range=[-2,2])
+            
 
-        fig.update_layout(legend=dict(yanchor="top", y=0.99,xanchor="right",x=0.1, orientation="h"))
+        fig.update_layout(legend=dict(yanchor="top", y=1,xanchor="right",x=1, orientation="h"))
+        
             
         return fig
     

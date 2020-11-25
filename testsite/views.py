@@ -28,6 +28,8 @@ def index(request):
         df = pd.DataFrame(every_data, columns=['accuracy','loss','val_accuracy','val_loss','file_name','index','algorithm'])
         shutil.rmtree(settings.MEDIA_ROOT)
 
+        
+
         dash.draw(df) 
 
         context = {'draw': True}
@@ -50,11 +52,12 @@ def populate():
     global sepa
     files = get_files()
     for f in files:
-        name = f.split("/")[-1]
+        name = f.split("\\")[-1]
         algorithm = name.split("_")[0]
         df = pd.read_csv(f,sep=sepa)
         for index, row in df.iterrows():
             aux = [row['accuracy'],row['loss'],row['val_accuracy'],row['val_loss'],name,index,algorithm]
             every_data.append(aux)
+    
 
 
