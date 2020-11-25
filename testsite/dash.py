@@ -135,7 +135,7 @@ def draw(df):
         elif u_name == "3d_size":
             fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", size=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "subplot":
-            fig = px.scatter(df_1,x=x_name,y=y_name,symbol="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+            fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "animated_subplot":
             fig = px.scatter(df_1, x=x_name, y=y_name,facet_col="algorithm",size=z_name,color=w_name,animation_frame="index", animation_group="algorithm", hover_data=["file_name","index"],width=1280,height=720)
             fig.update_layout(margin=dict(l=20,r=20,t=20,b=20))
