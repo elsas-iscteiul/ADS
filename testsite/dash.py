@@ -88,6 +88,72 @@ def draw(df):
                 
             ],
         ),
+        
+        html.Label('ADAM Color'),
+        dcc.Dropdown(
+            id='color_ADAM',
+            options=[
+                {'label':'red', 'value':'red'},
+                {'label':'green', 'value':'green'},
+                {'label':'yellow', 'value':'yellow'},
+                {'label':'blue', 'value':'blue'},
+                {'label':'pink', 'value':'pink'},
+                
+            ],
+        ),
+        
+        html.Label('ADAMW Color'),
+        dcc.Dropdown(
+            id='color_ADAMW',
+            options=[
+                {'label':'red', 'value':'red'},
+                {'label':'green', 'value':'green'},
+                {'label':'yellow', 'value':'yellow'},
+                {'label':'blue', 'value':'blue'},
+                {'label':'pink', 'value':'pink'},
+                
+            ],
+        ),
+        
+        html.Label('RADAM Color'),
+        dcc.Dropdown(
+            id='color_RADAM',
+            options=[
+                {'label':'red', 'value':'red'},
+                {'label':'green', 'value':'green'},
+                {'label':'yellow', 'value':'yellow'},
+                {'label':'blue', 'value':'blue'},
+                {'label':'pink', 'value':'pink'},
+                
+            ],
+        ),
+        
+        html.Label('RMSprop Color'),
+        dcc.Dropdown(
+            id='color_RMSprop',
+            options=[
+                {'label':'red', 'value':'red'},
+                {'label':'green', 'value':'green'},
+                {'label':'yellow', 'value':'yellow'},
+                {'label':'blue', 'value':'blue'},
+                {'label':'pink', 'value':'pink'},
+                
+            ],
+        ),
+        
+        html.Label('SGD Color'),
+        dcc.Dropdown(
+            id='color_sgd',
+            options=[
+                {'label':'red', 'value':'red'},
+                {'label':'green', 'value':'green'},
+                {'label':'yellow', 'value':'yellow'},
+                {'label':'blue', 'value':'blue'},
+                {'label':'pink', 'value':'pink'},
+                
+            ],
+        ),
+        
         dcc.Graph(id='desenho'),
         html.Label('Estatisticas'),
         dash_table.DataTable(
@@ -96,12 +162,15 @@ def draw(df):
             data = dff.to_dict('records')
             
         ),
-        dcc.Graph(id='Data'
-        ),
-        html.Div(
-            html.Pre(id='click-data', style={'display' : 'none'})
-        ),
-
+        
+        
+        
+        ##dcc.Graph(id='Data'
+        ##),
+        ##html.Div(
+        ##    html.Pre(id='click-data', style={'display' : 'none'})
+        ##),
+        
         html.Div(id='intermediary', style={'display' : 'none'}),
         
 
@@ -113,6 +182,7 @@ def draw(df):
     Output('intermediary','children'),
     [Input('dropdown','value')]
     )
+    
     def update_algs(alg):
         if alg != 'All':
             df_1 = df[df['algorithm'] == alg]
@@ -145,18 +215,23 @@ def draw(df):
     Input('w_type','value'),
     Input("u_type","value"),
     Input('intermediary','children'),
+    Input("color_ADAM","value"),
+    Input("color_ADAMW","value"),
+    Input("color_RADAM","value"),
+    Input("color_RMSprop","value"),
+    Input("color_sgd","value"),
     #Input('click-data','children'),
     #Input('desenho','hoverData'),
     #Input('dropdown','clickData')
 
     ])
            
-    def update_graph(x_name,y_name,z_name,w_name,u_name, df_json):
+    def update_graph(x_name,y_name,z_name,w_name,u_name, df_json, color_ADAM, color_ADAMW, color_RADAM, color_RMSprop, color_sgd):
         df_1 = pd.read_json(df_json)
         if u_name == "3d_symbol":
             fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,symbol="algorithm", color=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "3d_size":
-            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", size=w_name,hover_data=['file_name','index'],width=1280,height=720)
+            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_sgd, color_ADAM], size=w_name,hover_data=['file_name','index'],width=1280,height=720, )
         elif u_name == "subplot":
             fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "animated_subplot":
