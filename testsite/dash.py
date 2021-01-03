@@ -7,6 +7,7 @@ from django_plotly_dash import DjangoDash
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import pandas as pd
+import json
 
 
 
@@ -76,6 +77,12 @@ def draw(df):
                 {'label':'val_loss', 'value':'val_loss'},
             ],
         ),
+        html.Div("clickData"),
+        dcc.Markdown(
+            id="click-data",
+            ),
+                
+            
         
         html.Label('Gráfico'),
         dcc.Dropdown(
@@ -191,21 +198,8 @@ def draw(df):
 
         return df_1.to_json()
         
-    @app.callback(
-    Output('click-data','children'),
-    [Input('Data','clickData')]
-    )
-    #def getting_table(df_json):
-    #    df_fileName = pd.read_json(df_json)
-    #    table_filename = df_fileName['file_name']
-    #    if clickData is None:
-    #        return df_json
-    #    else:
-    #        color = 'green'
-    #        return table_filename
-    def display_click_data(clickData):
-        return json.dumps(clickData)
-    
+
+
   
     @app.callback(
     Output('desenho','figure'),
@@ -220,9 +214,7 @@ def draw(df):
     Input("color_RADAM","value"),
     Input("color_RMSprop","value"),
     Input("color_sgd","value"),
-    #Input('click-data','children'),
-    #Input('desenho','hoverData'),
-    #Input('dropdown','clickData')
+
 
     ])
            
@@ -243,25 +235,23 @@ def draw(df):
 
         fig.update_layout(legend=dict(yanchor="top", y=1,xanchor="right",x=1, orientation="h"))
         fig.update_layout(clickmode='event+select')
-    
+
+        
+        
         return fig
-        
-    #def update_graph(hoverData):
-    #    if not hoverData:
-    #        opacity = 0
-    #    else:
-    #        opacity = 0.8
-    #    data = [go.Scatter(
-    #                opacity=0.8,
-    #                name="Graph"
-    #            ),
-    #            go.Scatter(
-    #                opacity=opacity,
-    #                name='Moving Line')
-    #            ]
-    #    layout = go.Layout(
-    #                hovermode="False"
-    #                )
-        
-    #    return {'data': data, 'layout': layout}
-            
+
+    @app.callback(
+    Output('click-data','children'),
+    [Input('desenho','clickData')]
+    )
+    
+    
+    def display_click_data(clickData):
+        x = clickData
+        y = clickData.get("points")[0]
+        z = y.get("customdata")
+        return json.dumps(z)
+    
+
+    
+      

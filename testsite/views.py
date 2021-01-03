@@ -52,7 +52,7 @@ def populate():
     global sepa
     files = get_files()
     for f in files:
-        name = f.split("/")[-1]
+        name = f.split("\\")[-1]
         algorithm = name.split("_")[0]
         df = pd.read_csv(f,sep=sepa)
         for index, row in df.iterrows():
