@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'testsite',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'bootstrap4'
     
 ]
 
@@ -54,8 +55,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_plotly_dash.middleware.BaseMiddleware',
+
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -129,5 +132,4 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = None
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
 X_FRAME_OPTIONS = 'SAMEORIGIN'

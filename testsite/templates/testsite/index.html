@@ -1,7 +1,3 @@
-<head> 
-  {% load plotly_dash %}
-  {% plotly_header %}
-</head>
 <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
   <label for="pattern">Padrao de nome:</label><br>
   <input type="text" id="pattern" name="pattern"><br>
@@ -11,9 +7,3 @@
   <input type="file" id="myfiles" name="myfiles" webkitdirectory directory/>
   <input type="submit"/>
 </form>
-
-{% if draw %}
-{% plotly_direct name="DashApp" %}
-{% endif %}
-
-{% plotly_footer %}
