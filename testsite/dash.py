@@ -204,7 +204,7 @@ def draw(df):
 
   
     @app.callback(
-    Output('desenho','figure'),
+    Output(component_id='desenho', component_property='figure'),
     [Input('x_type','value'),
     Input('y_type','value'),
     Input('z_type','value'),
@@ -222,28 +222,29 @@ def draw(df):
     def update_graph(x_name,y_name,z_name,w_name,u_name, df_json, color_ADAM, color_ADAMW, color_RADAM, color_RMSprop, color_sgd):
         df_1 = pd.read_json(df_json)
         if u_name == "3d_symbol":
-            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,symbol="algorithm", color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,symbol="algorithm", color=w_name,hover_data=['file_name','index'],width=768,height=576)
         elif u_name == "3d_size":
-            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_sgd, color_ADAM], size=w_name,hover_data=['file_name','index'],width=1280,height=720, )
+            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_sgd, color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576 )
         elif u_name == "subplot":
             fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
         elif u_name == "animated_subplot":
-            fig = px.scatter(df_1, x=x_name, y=y_name,facet_col="algorithm",size=z_name,color=w_name,animation_frame="index", animation_group="algorithm", hover_data=["file_name","index"],width=1280,height=720)
+            fig = px.scatter(df_1, x=x_name, y=y_name,facet_col="algorithm",size=z_name,color=w_name,animation_frame="index", animation_group="algorithm", hover_data=["file_name","index"],width=768,height=576)
             fig.update_layout(margin=dict(l=20,r=20,t=20,b=20))
             fig.update_xaxes(range=[-2,2])
             fig.update_yaxes(range=[-2,2])
+       
 
-        
+        fig.update_layout(clickmode='event+select')
 
         fig.update_layout(legend=dict(yanchor="top", y=1,xanchor="right",x=1, orientation="h"))
-        fig.update_layout(clickmode='event+select')
+        
         
         
         
         return fig
 
     @app.callback(
-     Output('desenho1','figure'),
+     Output(component_id='desenho1', component_property='figure'),
      [Input('desenho','clickData'),
      Input('x_type','value'),
      Input('y_type','value'),
@@ -257,11 +258,13 @@ def draw(df):
 
     def display_click_data(clickData, x_name,y_name,z_name,w_name,u_name):
         
-        y = clickData.get("points")[0]["customdata"][0]
+        y = clickData["points"][0]["customdata"][0]
         df_1 = df[df["file_name"] == y]
-        fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="file_name",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+        fig1 = px.scatter(df_1,x=x_name,y=y_name,title=y,size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
         
-        return fig
+        return fig1
+        
+
     
 
     @app.callback(
