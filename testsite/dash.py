@@ -259,7 +259,6 @@ def draw(df):
     def update_graph(x_name,y_name,z_name,w_name,u_name, df_json, color_ADAM, color_ADAMW, color_RADAM, color_RMSprop, color_SGD):
         df_1 = pd.read_json(df_json)
         n_algs = len(df_1.algorithm.unique())
-        print('NUMERO DE ALGORITMOS:  ' + str(n_algs))
             
         if u_name == "3d_size" and n_algs > 1 :
                 fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_SGD, color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576 )
