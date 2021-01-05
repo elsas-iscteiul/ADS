@@ -261,7 +261,12 @@ def draw(df):
         n_algs = len(df_1.algorithm.unique())
             
         if u_name == "3d_size" and n_algs > 1 :
-                fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_SGD, color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576 )
+                fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_map={
+                "ADAM": color_ADAM,
+                "ADAMW": color_ADAMW,
+                "RADAM": color_RADAM,
+                "RMSprop": color_RMSprop,
+                "SGD": color_SGD}, size=w_name,hover_data=['file_name','index'],width=768,height=576 )
         
         elif u_name == "3d_size" and n_algs == 1:
                 fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576)
