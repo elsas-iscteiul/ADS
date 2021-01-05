@@ -1,0 +1,7 @@
+django
+pandas
+plotly
+dash
+django_plotly_dash
+dash-bootstrap-components
+django-bootstrap4
