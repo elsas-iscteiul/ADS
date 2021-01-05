@@ -92,9 +92,83 @@ def draw(df):
                         
                     ],
                 ),
+                dcc.Dropdown(id='color_ADAM', style={'display' : 'none'}),
+                dcc.Dropdown(id='color_ADAMW', style={'display' : 'none'}),
+                dcc.Dropdown(id='color_RADAM', style={'display' : 'none'}),
+                dcc.Dropdown(id='color_RMSprop', style={'display' : 'none'}),
+                dcc.Dropdown(id='color_SGD', style={'display' : 'none'}),
+                html.Div(id='colors'),
                 
                 
-                html.Label('ADAM Color'),
+                
+                ),width={'size': 3},
+            ),
+            dbc.Col(
+                (dcc.Tabs([
+                    dcc.Tab(label='Principal', children=[
+                        dcc.Graph(id='desenho',style={"display":"inline-block"})
+                    ]),
+                    dcc.Tab(label='Same File',children=[
+                        dcc.Graph(id='desenho1',style={"display":"inline-block"})
+                    ]),
+
+                ]),),width = {'size': 9}
+            ),
+        ]),
+        
+        
+        
+        
+        html.Label('Estatisticas'),
+        
+
+        html.Div(id='table1'),
+        
+        html.Div(id='intermediary', style={'display' : 'none'}),
+        
+
+    ])
+
+
+    
+    @app.callback(
+    Output('intermediary','children'),
+    [Input('dropdown','value')]
+    )
+    
+    def update_algs(alg):
+        if alg != 'All':
+            df_1 = df[df['algorithm'] == alg]
+        else:
+            df_1 = df
+
+        return df_1.to_json()
+
+
+
+
+    @app.callback(
+        Output('colors','children'),
+        [Input('dropdown','value')]
+    )
+    def color_select(alg):
+        options=[
+            {'label':'red', 'value':'red'},
+            {'label':'green', 'value':'green'},
+            {'label':'yellow', 'value':'yellow'},
+            {'label':'blue', 'value':'blue'},
+            {'label':'pink', 'value':'pink'},
+        ]
+
+        if alg != 'All':
+            label_string = alg + ' Color'
+            
+            result = (html.Label(label_string),
+                      dcc.Dropdown(id='color_ADAM', options= options),)
+            return result 
+
+        else:
+            return (html.Label('ADAM Color'),
                 dcc.Dropdown(
                     id='color_ADAM',
                     options=[
@@ -157,76 +231,44 @@ def draw(df):
                         {'label':'pink', 'value':'pink'},
                         
                     ],
-                ),),width={'size': 3},
-            ),
-            dbc.Col(
-                (dcc.Tabs([
-                    dcc.Tab(label='Principal', children=[
-                        dcc.Graph(id='desenho',style={"display":"inline-block"})
-                    ]),
-                    dcc.Tab(label='Same File',children=[
-                        dcc.Graph(id='desenho1',style={"display":"inline-block"})
-                    ]),
-
-                ]),),width = {'size': 9}
-            ),
-        ]),
-        
-        
-        
-        
-        html.Label('Estatisticas'),
-        
-
-        html.Div(id='table1'),
-        
-        html.Div(id='intermediary', style={'display' : 'none'}),
-        
-
-    ])
-
-
-    
-    @app.callback(
-    Output('intermediary','children'),
-    [Input('dropdown','value')]
-    )
-    
-    def update_algs(alg):
-        if alg != 'All':
-            df_1 = df[df['algorithm'] == alg]
-        else:
-            df_1 = df
-
-        return df_1.to_json()
-        
+                ),)
+            
 
 
   
     @app.callback(
-    Output(component_id='desenho', component_property='figure'),
-    [Input('x_type','value'),
-    Input('y_type','value'),
-    Input('z_type','value'),
-    Input('w_type','value'),
-    Input("u_type","value"),
-    Input('intermediary','children'),
-    Input("color_ADAM","value"),
-    Input("color_ADAMW","value"),
-    Input("color_RADAM","value"),
-    Input("color_RMSprop","value"),
-    Input("color_sgd","value"),
+        Output(component_id='desenho', component_property='figure'),
+        [Input('x_type','value'),
+        Input('y_type','value'),
+        Input('z_type','value'),
+        Input('w_type','value'),
+        Input("u_type","value"),
+        Input('intermediary','children'),
+        Input("color_ADAM","value"),
+        Input("color_ADAMW","value"),
+        Input("color_RADAM","value"),
+        Input("color_RMSprop","value"),
+        Input("color_SGD","value"),
 
     ])
            
-    def update_graph(x_name,y_name,z_name,w_name,u_name, df_json, color_ADAM, color_ADAMW, color_RADAM, color_RMSprop, color_sgd):
+    def update_graph(x_name,y_name,z_name,w_name,u_name, df_json, color_ADAM, color_ADAMW, color_RADAM, color_RMSprop, color_SGD):
         df_1 = pd.read_json(df_json)
+        n_algs = len(df_1.algorithm.unique())
+        if n_algs > 1:
+            
+            if u_name == "3d_size":
+                fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_SGD, color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576 )
+        
+        else:
+            if u_name == "3d_size":
+                fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576)
+
         if u_name == "3d_symbol":
-            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,symbol="algorithm", color=w_name,hover_data=['file_name','index'],width=768,height=576)
-        elif u_name == "3d_size":
-            fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,color="algorithm", color_discrete_sequence=[color_ADAMW, color_RADAM, color_RMSprop, color_sgd, color_ADAM], size=w_name,hover_data=['file_name','index'],width=768,height=576 )
+                fig = px.scatter_3d(df_1, x= x_name, y=y_name,z= z_name,symbol="algorithm", color=w_name,hover_data=['file_name','index'],width=768,height=576)
+
         elif u_name == "subplot":
-            fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
+                fig = px.scatter(df_1,x=x_name,y=y_name,facet_col="algorithm",size=z_name,color=w_name,hover_data=['file_name','index'],width=768,height=576)
         elif u_name == "animated_subplot":
             fig = px.scatter(df_1, x=x_name, y=y_name,facet_col="algorithm",size=z_name,color=w_name,animation_frame="index", animation_group="algorithm", hover_data=["file_name","index"],width=768,height=576)
             fig.update_layout(margin=dict(l=20,r=20,t=20,b=20))
@@ -261,7 +303,7 @@ def draw(df):
         y = clickData["points"][0]["customdata"][0]
         df_1 = df[df["file_name"] == y]
         fig1 = px.scatter(df_1,x=x_name,y=y_name,title=y,size=z_name,color=w_name,hover_data=['file_name','index'],width=1280,height=720)
-        
+      
         return fig1
         
 
